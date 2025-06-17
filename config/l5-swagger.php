@@ -169,12 +169,7 @@ return [
          * API security definitions. Will be generated into documentation file.
         */
         'securityDefinitions' => [
-                'bearerAuth' => [
-                    'type' => 'apiKey',
-                    'description' => 'Masukkan token dengan format: Bearer {token}',
-                    'name' => 'Authorization',
-                    'in' => 'header',
-                 ],
+                
             'securitySchemes' => [
                 /*
                  * Examples of Security schemes
@@ -221,6 +216,28 @@ return [
                     'in' => 'header', // The location of the API key. Valid values are "query" or "header".
                 ],
                 */
+    'passport_token_ready' => [
+        'type' => 'http',
+        'scheme' => 'bearer',
+        'description' => 'Enter token in format without "Bearer "',
+        'name' => 'Authorization',
+        'in' => 'header',
+    ],
+    'passport2' => [
+        'type' => 'oauth2',
+        'description' => 'Laravel passport oauth2 security',
+        'scheme' => 'https',
+        'flows' => [
+            'password' => [
+                'authorizationUrl' => config('app.url') . '/oauth/authorize',
+                'tokenUrl' => config('app.url') . '/oauth/token',
+                'refreshUrl' => config('app.url') . '/token/refresh',
+                'scopes' => [],
+            ],
+        ],
+    ],
+
+
             ],
             'security' => [
                 /*

@@ -12,53 +12,38 @@
         "/api/user/register": {
             "post": {
                 "tags": [
-                    "User"
+                    "user"
                 ],
-                "summary": "Register user baru",
-                "operationId": "2d2ebba728688d7f51887b0cd28ca35a",
+                "summary": "Register new user & get token",
+                "operationId": "register",
                 "requestBody": {
+                    "description": "Request body description",
                     "required": true,
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "required": [
-                                    "name",
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "IU"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "iu@kpop.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "secure123"
-                                    }
-                                },
-                                "type": "object"
+                            "schema": {},
+                            "example": {
+                                "name": "Augusta Ada Byron",
+                                "email": "ada.lovelace@gmail.com",
+                                "password": "Ba88a93$"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "User berhasil didaftarkan",
+                    "400": {
+                        "description": "Invalid input",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "User registered"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
                             }
                         }
                     }
@@ -68,48 +53,39 @@
         "/api/user/login": {
             "post": {
                 "tags": [
-                    "User"
+                    "user"
                 ],
-                "summary": "Login dan dapatkan access token",
-                "operationId": "0e18ef6db0c92942c80f123acaeef89c",
+                "summary": "Log in to existing user & get token",
+                "operationId": "login",
                 "requestBody": {
+                    "description": "Request body description",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "email",
-                                    "password"
-                                ],
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "example": "iu@kpop.com"
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "secure123"
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "example": {
+                                "email": "ada.lovelace@gmail.com",
+                                "password": "Ba88a93$"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "Token berhasil dikembalikan",
+                    "400": {
+                        "description": "Invalid input",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "token": {
-                                            "type": "string",
-                                            "example": "eyJ0eXAiOiJK..."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
                             }
                         }
                     }
@@ -119,31 +95,43 @@
         "/api/user/logout": {
             "post": {
                 "tags": [
-                    "User"
+                    "user"
                 ],
-                "summary": "Logout user",
-                "operationId": "dd60e2b11d5020dfb3e95e8d9fdee36d",
+                "summary": "Log out & destroy self token",
+                "operationId": "logout",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "User Email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
-                    "200": {
-                        "description": "Logout berhasil",
+                    "400": {
+                        "description": "Invalid input",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Logged out"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
                             }
                         }
                     }
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "passport_token_ready": [],
+                        "passport": []
                     }
                 ]
             }
@@ -280,23 +268,44 @@
                 "tags": [
                     "merchandise"
                 ],
-                "summary": "Hapus merchandise",
-                "operationId": "99da51d5f6e7c294533dd454708dfd4c",
+                "summary": "Remove the specified item",
+                "operationId": "destroy",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "ID of item that needs to be removed",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "format": "int64"
                         }
                     }
                 ],
                 "responses": {
+                    "404": {
+                        "description": "Item not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
                     "204": {
-                        "description": "Berhasil dihapus"
+                        "description": "Deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "passport_token_ready": [],
+                        "passport": []
+                    }
+                ]
             }
         }
     },
@@ -309,12 +318,34 @@
                     "name": "User"
                 }
             }
+        },
+        "securitySchemes": {
+            "passport_token_ready": {
+                "type": "http",
+                "scheme": "bearer",
+                "description": "Enter token in format without \"Bearer \"",
+                "name": "Authorization",
+                "in": "header"
+            },
+            "passport2": {
+                "type": "oauth2",
+                "description": "Laravel passport oauth2 security",
+                "scheme": "https",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://localhost/oauth/authorize",
+                        "tokenUrl": "http://localhost/oauth/token",
+                        "refreshUrl": "http://localhost/token/refresh",
+                        "scopes": []
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
-            "name": "User",
-            "description": "User"
+            "name": "user",
+            "description": "user"
         },
         {
             "name": "merchandise",

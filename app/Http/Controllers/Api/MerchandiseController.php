@@ -134,26 +134,41 @@ class MerchandiseController extends Controller
         return $merch;
     }
 
-    /**
+/**
  * @OA\Delete(
  *     path="/api/merchandise/{id}",
- *     summary="Hapus merchandise",
  *     tags={"merchandise"},
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         @OA\Schema(type="integer")
+ *     summary="Remove the specified item",
+ *     operationId="destroy",
+ *     @OA\Response(
+ *         response=404,
+ *         description="Item not found",
+ *         @OA\JsonContent()
  *     ),
  *     @OA\Response(
  *         response=204,
- *         description="Berhasil dihapus"
- *     )
+ *         description="Deleted successfully",
+ *         @OA\JsonContent()
+ *     ),
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID of item that needs to be removed",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *             format="int64"
+ *         )
+ *     ),
+ *     security={{"passport_token_ready":{},"passport":{}}}
  * )
  */
+public function destroy($id)
+{
+    $merch = Merchandise::findOrFail($id);
+    $merch->delete();
 
-    public function destroy($id) {
-        Merchandise::destroy($id);
-        return response()->json(null, 204);
-    }
+    return response()->json(["message" => "Deleted successfully", "data" => $merch], 204);
+}
+
 }
