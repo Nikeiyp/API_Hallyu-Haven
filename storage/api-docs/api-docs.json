@@ -139,21 +139,49 @@
         "/api/merchandise": {
             "get": {
                 "tags": [
-                    "merchandise"
+                    "Merchandise"
                 ],
-                "summary": "merchandise list",
+                "summary": "Get list of merchandise",
+                "description": "Returns list of merchandise with optional filtering and pagination",
                 "operationId": "3b0afb300edbee208736285d24e8b56d",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Filter by product name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Pagination page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Success"
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             },
             "post": {
                 "tags": [
-                    "merchandise"
+                    "Merchandise"
                 ],
-                "summary": "Tambah merchandise baru",
+                "summary": "Create a new merchandise item",
                 "operationId": "7cded85aecb04b137403dccf7a1b0be1",
                 "requestBody": {
                     "required": true,
@@ -162,21 +190,18 @@
                             "schema": {
                                 "required": [
                                     "name",
-                                    "price"
+                                    "price",
+                                    "stock"
                                 ],
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Lightstick EXO"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "example": "Official EXO Lightstick"
+                                        "type": "string"
                                     },
                                     "price": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 450000
+                                        "type": "number"
+                                    },
+                                    "stock": {
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -186,7 +211,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Berhasil menambahkan merchandise"
+                        "description": "Merchandise created"
                     }
                 }
             }
@@ -194,9 +219,9 @@
         "/api/merchandise/{id}": {
             "get": {
                 "tags": [
-                    "merchandise"
+                    "Merchandise"
                 ],
-                "summary": "Ambil satu merchandise berdasarkan ID",
+                "summary": "Get a single merchandise item",
                 "operationId": "54973fff9e9bdaddd0a02de397f04aa7",
                 "parameters": [
                     {
@@ -210,18 +235,18 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Data merchandise ditemukan"
+                        "description": "Merchandise found"
                     },
                     "404": {
-                        "description": "Data tidak ditemukan"
+                        "description": "Not found"
                     }
                 }
             },
             "put": {
                 "tags": [
-                    "merchandise"
+                    "Merchandise"
                 ],
-                "summary": "Update data merchandise",
+                "summary": "Update a merchandise item",
                 "operationId": "097e405a2e8e0de689d03fc31ecd6efc",
                 "parameters": [
                     {
@@ -240,17 +265,13 @@
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "type": "string",
-                                        "example": "Lightstick Blackpink"
+                                        "type": "string"
                                     },
                                     "description": {
-                                        "type": "string",
-                                        "example": "Limited Edition"
+                                        "type": "string"
                                     },
                                     "price": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 399000
+                                        "type": "number"
                                     }
                                 },
                                 "type": "object"
@@ -260,21 +281,20 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Data merchandise berhasil diupdate"
+                        "description": "Updated successfully"
                     }
                 }
             },
             "delete": {
                 "tags": [
-                    "merchandise"
+                    "Merchandise"
                 ],
-                "summary": "Remove the specified item",
-                "operationId": "destroy",
+                "summary": "Delete a merchandise item",
+                "operationId": "99da51d5f6e7c294533dd454708dfd4c",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID of item that needs to be removed",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -283,29 +303,13 @@
                     }
                 ],
                 "responses": {
-                    "404": {
-                        "description": "Item not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "204": {
-                        "description": "Deleted successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
+                        "description": "Deleted successfully"
+                    },
+                    "404": {
+                        "description": "Item not found"
                     }
-                },
-                "security": [
-                    {
-                        "passport_token_ready": [],
-                        "passport": []
-                    }
-                ]
+                }
             }
         }
     },
@@ -348,8 +352,8 @@
             "description": "user"
         },
         {
-            "name": "merchandise",
-            "description": "merchandise"
+            "name": "Merchandise",
+            "description": "Merchandise"
         }
     ]
 }

@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('merchandise', MerchandiseController::class);
 
+
 Route::prefix('user')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
