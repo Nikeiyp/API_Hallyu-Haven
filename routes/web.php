@@ -14,3 +14,7 @@ Route::get('/merch', function () {
 Route::get('/merch/{i}', function () {
     return view('pages.pdp'); // Buat view ini nanti
 })->name('pdp');
+
+Route::get('/cart', function () {
+    return view('pages.cart'); // Ganti 'pages.cart' sesuai lokasi view keranjang kamu
+})->name('cart');
