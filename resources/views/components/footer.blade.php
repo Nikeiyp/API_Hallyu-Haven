@@ -1,8 +1,10 @@
-<footer class="footer-area-wrapper bg-white">
-    <div class="footer-area section-space--ptb_90">
+<!-- footer -->
+<div class="footer-area-wrapper bg-white">
+    <div class="footer-area section-space--pb_90">
         <div class="container-fluid container-fluid--cp-100">
             <div class="row footer-widget-wrapper">
-                <div class="col-lg-3 col-md-6 col-sm-6 footer-widget">
+
+                <div class="col-lg-3 col-md-4 col-sm-6 footer-widget">
                     <h6 class="footer-widget__title mb-20">Customer Service</h6>
                     <ul class="footer-widget__list">
                         <li><a href="#" class="hover-style-link">Help & Contact Us</a></li>
@@ -15,45 +17,67 @@
                     <h6 class="footer-widget__title mb-20">Company</h6>
                     <ul class="footer-widget__list">
                         <li><a href="#" class="hover-style-link">About Us</a></li>
-                        <li><a href="#" class="hover-style-link">Our Services</a></li>
-                        <li><a href="#" class="hover-style-link">Contact</a></li>
-                        <li><a href="#" class="hover-style-link">Careers</a></li>
+                        <li><a href="#" class="hover-style-link">What We Do</a></li>
+                        <li><a href="#" class="hover-style-link">FAQ Page</a></li>
+                        <li><a href="#" class="hover-style-link">Contact Us</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 footer-widget">
+                <div class="col-lg-3 col-md-4 col-sm-6 footer-widget">
                     <h6 class="footer-widget__title mb-20">Social Media</h6>
                     <ul class="footer-widget__list">
                         <li><a href="#" class="hover-style-link">Facebook</a></li>
-                        <li><a href="#" class="hover-style-link">Twitter</a></li>
+                        <li><a href="#" class="hover-style-link">X</a></li>
                         <li><a href="#" class="hover-style-link">Instagram</a></li>
-                        <li><a href="#" class="hover-style-link">Youtube</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6 footer-widget">
                     <h6 class="footer-widget__title mb-20">Newsletter</h6>
-                    <div class="footer-newsletter">
-                        <input class="newsletter-input" type="text" placeholder="Your email address">
-                        <button class="newsletter-button"><i class="icon-arrow-right"></i></button>
+                    <div class="footer-widget__newsletter mt-30">
+                        <input type="text" placeholder="Your email address">
+                        <button class="submit-button"><i class="icon-arrow-right"></i></button>
                     </div>
+                    <ul class="footer-widget__footer-menu  section-space--mt_60 d-none d-lg-block">
+                        <li><a href="#">Term & Condition</a></li>
+                        <li><a href="#">Policy</a></li>
+                        <li><a href="#">Map</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="row footer-bottom-area border-top section-space--ptb_30">
-                <div class="col-md-6 text-center text-md-start">
-                    <div class="copyright-text">
-                        <p>© 2024 MTWN. <a href="#" target="_blank">All Rights Reserved.</a></p>
-                    </div>
+        </div>
+    </div>
+    <div class="footer-copyright-area border-top section-space--ptb_30">
+        <div class="container-fluid container-fluid--cp-100">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 order-md-1 order-2">
+                    <span class="copyright-text text-center text-md-start">&copy; 2025 Hallyu Haven. <a
+                            href="https://hasthemes.com/" target="_blank">All Rights Reserved.</a></span>
+
                 </div>
-                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+
+                <div class="col-lg-6 col-md-6 order-md-2 order-1">
                     <div class="footer-bottom-social">
-                        <span class="social-text">Follow Us On Social</span>
-                        <ul class="social-networks">
-                            <li><a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="social social_facebook"></i></a></li>
-                            <li><a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="social social_twitter"></i></a></li>
-                            <li><a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="social social_instagram"></i></a></li>
+                        <h6 class="title">Follow Us On Social</h6>
+                        <ul class="list footer-social-networks ">
+                            <li class="item">
+                                <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+                                    <i class="social social_facebook"></i>
+                                </a>
+                            </li>
+                            <li class="item">
+                                <a href="https://x.com" target="_blank" aria-label="X">
+                                     <i class="fab fa-x-twitter"></i>
+                                </a>
+                            </li>
+                            <li class="item">
+                                <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                                    <i class="social social_instagram"></i>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</footer>
+</div>
+<!--end footer-->a
