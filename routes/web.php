@@ -5,21 +5,12 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('pages.home');
-});
+})->name('home');
 
-Route::get('/produk', function () {
-    return view('pages.product'); // Buat view ini nanti
-});
+Route::get('/merch', function () {
+    return view('pages.plp'); // Buat view ini nanti
+})->name('plp');
 
-Route::get('/tentang', function () {
-    return view('pages.about'); // Buat view ini juga
-});
-
-Route::get('/kontak', function () {
-    return view('pages.contact'); // Buat view ini juga
-});
-
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect('/');
-})->name('logout');
+Route::get('/merch/{i}', function () {
+    return view('pages.pdp'); // Buat view ini nanti
+})->name('pdp');
