@@ -8202,18 +8202,18 @@ blockquote::before {
 /* .single-brand-item a {
   display: block;
 } */
-.single-brand-item a img {
-  opacity: 0.35;
-  -webkit-transition: 0.5s;
-  -o-transition: 0.5s;
-  transition: 0.5s;
-  height: 80px;
-  padding: 20px;
-  object-fit: center;
-  vertical-align: center;
+.single-brand-item img {
+  max-height: 80px;      /* Tinggi maksimal */
+  width: auto;           /* Biarkan lebar menyesuaikan */
+  margin: 0 auto;        /* Tengah */
+  display: block;        /* Agar bisa center */
+  opacity: 0.6;          /* Transparansi bisa dikurangi kalau terlalu pucat */
+  transition: 0.3s ease;
 }
-.single-brand-item a:hover img {
-  opacity: 1;
+
+.single-brand-item img:hover {
+  opacity: 1;            /* Efek hover */
+  transform: scale(1.05); /* Zoom sedikit saat hover */
 }
 
 .brand-slider-active .slick-arrow {

@@ -41,22 +41,22 @@
         </div>
 
         <!-- Banner Video Area Start -->
-        <div class="banner-video-area overflow-hidden">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="banner-video-box">
-                            <img src="https://www.magd.ox.ac.uk/wp-content/uploads/2022/07/3027-052-2000x1000.jpg" alt="">
-                            <div class="video-icon">
-                                <a href="https://youtu.be/Na5KPnx0uS8?si=PPOjfum8xG-Jt8h9" class="popup-youtube">
-                                        <i class="linear-icon-play"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="banner-video-area overflow-hidden">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="banner-video-box" id="video-banner" style="position: relative; cursor: pointer;">
+          <img id="video-thumbnail" src="{{ asset('asset/hallyu-images/bpdeadline.jpg') }}" alt="Video Thumbnail" class="img-fluid">
+
+          <div class="video-icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <i class="linear-icon-play" style="font-size: 48px; color: white;"></i>
+          </div>
         </div>
-        <!-- Banner Video Area End -->
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Banner Video Area End -->
 
         <!-- Our Brand Area Start -->
 <div class="our-brand-area section-space--pb_90">
@@ -64,42 +64,42 @@
         <div class="brand-slider-active">
             <div class="col-lg-12">
                 <div class="single-brand-item">
-                    <a href="#"><img src="asset/images/brand/partnerb1.jpg" class="img-fluid" alt="Brand Images"></a>
+                    <a href="#"><img src="asset/hallyu-images/logo/bplogo.png" class="img-fluid" alt="Brand Images"></a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="single-brand-item">
-                    <a href="#"><img src="asset/images/brand/partnerb2.jpg" class="img-fluid" alt="Brand Images"></a>
+                    <a href="#"><img src="asset/hallyu-images/logo/exologo.png" class="img-fluid" alt="Brand Images"></a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="single-brand-item">
-                    <a href="#"><img src="asset/images/brand/partnerb3.jpg" class="img-fluid" alt="Brand Images"></a>
+                    <a href="#"><img src="asset/hallyu-images/logo/btslogo.png" class="img-fluid" alt="Brand Images"></a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="single-brand-item">
-                    <a href="#"><img src="asset/images/brand/partnerb4.jpg" class="img-fluid" alt="Brand Images"></a>
+                    <a href="#"><img src="asset/hallyu-images/logo/twicelogo.png" class="img-fluid" alt="Brand Images"></a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="single-brand-item">
-                    <a href="#"><img src="asset/images/brand/partnerb5.jpg" class="img-fluid" alt="Brand Images"></a>
+                    <a href="#"><img src="asset/hallyu-images/logo/itzylogo.png" class="img-fluid" alt="Brand Images"></a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="single-brand-item">
-                    <a href="#"><img src="asset/images/brand/partnerb6.jpg" class="img-fluid" alt="Brand Images"></a>
+                    <a href="#"><img src="asset/hallyu-images/logo/ikonlogo.png" class="img-fluid" alt="Brand Images"></a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="single-brand-item">
-                    <a href="#"><img src="asset/images/brand/partnerb7.jpg" class="img-fluid" alt="Brand Images"></a>
+                    <a href="#"><img src="asset/hallyu-images/logo/treasurelogo.png" class="img-fluid" alt="Brand Images"></a>
                 </div>
             </div>
             <div class="col-lg-12">
                 <div class="single-brand-item">
-                    <a href="#"><img src="asset/images/brand/partnerb8.jpg" class="img-fluid" alt="Brand Images"></a>
+                    <a href="#"><img src="asset/hallyu-images/logo/nctlogo.png" class="img-fluid" alt="Brand Images"></a>
                 </div>
             </div>
         </div>
@@ -142,6 +142,24 @@
 @endsection
 @section('addition_css')
 @endsection
+
 @section('addition_script')
-    <script src="{{asset('pages/js/home.js')}}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const banner = document.getElementById('video-banner');
+        const thumbnailHTML = banner.innerHTML;
+
+        banner.addEventListener('mouseenter', function () {
+            banner.innerHTML = `
+                <iframe width="100%" height="650" src="https://www.youtube.com/embed/8YiR9v3sOpk?autoplay=1&mute=1&rel=0&showinfo=0&modestbranding=1"
+                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        });
+
+        banner.addEventListener('mouseleave', function () {
+            banner.innerHTML = thumbnailHTML;
+        });
+    });
+</script>
+
+<script src="{{asset('pages/js/home.js')}}"></script>
 @endsection
