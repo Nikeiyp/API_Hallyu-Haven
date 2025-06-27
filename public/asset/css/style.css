@@ -3629,6 +3629,38 @@ input[type=checkbox] {
   background-color: #9fa5b2;
 }
 
+/* Slick Custom Pagination Dots */
+.slick-dots {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  margin-top: 30px;
+  padding-left: 0;
+}
+
+.slick-dots li {
+  display: inline-block;
+}
+
+.slick-dots li button {
+  font-size: 0;
+  width: 12px;
+  height: 12px;
+  background-color: #ddd;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.slick-dots li.slick-active button {
+  background-color: #ffb52b;
+  transform: scale(1.2);
+}
+
+
 .single-hero-slider-7, .single-hero-slider-four {
   height: 600px;
   background: #f1f1f1;

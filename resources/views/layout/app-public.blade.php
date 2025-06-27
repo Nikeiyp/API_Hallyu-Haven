@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="{{ config('app.desc') }}">
-    <meta name="keywords" content="ecommerce,book">
+    <meta name="keywords" content="ecommerce,merchandise">
     <meta name="author" content="{{ config('app.name') }}">
 
     <title>@yield('title') | {{ config('app.name') }}</title>
@@ -20,9 +20,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/plugins/magnific-popup.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/plugins/easyzoom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/plugins/slick-theme.css') }}">
     @yield('addition_css')
     <!-- END: CSS Assets -->
 </head>
+
 <body class="box-home">
     <div class="page-box">
         @include('components.header')

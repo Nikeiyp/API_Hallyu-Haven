@@ -5,196 +5,209 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Merchandise;
-use OpenApi\Annotations as OA;
-
-/**
- * Class AuthController.
- * 
- * @author nikeisha.422024026@gmail.com
- */
-
-
-
-/**
- * @OA\Info(
- *     version="1.0.0",
- *     title="Hallyu Haven API",
- *     description="API dokumentasi toko online Kpop merchandise",
- *     @OA\Contact(
- *         email="nikeisha.422024026@gmail.com"
- *     )
- * )
- */
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class MerchandiseController extends Controller
 {
-
     /**
      * @OA\Get(
-     *     path="/api/merchandise",
-     *     tags={"Merchandise"},
-     *     summary="Get list of merchandise",
-     *     description="Returns list of merchandise with optional filtering and pagination",
-     *     @OA\Parameter(
-     *         name="search",
-     *         in="query",
-     *         description="Filter by product name",
-     *         required=false,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Pagination page number",
-     *         required=false,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful",
-     *         @OA\JsonContent(type="object")
-     *     )
+     * path="/api/v1/merchandise",
+     * summary="Get all merchandise",
+     * tags={"Merchandise"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Response(
+     * response=200,
+     * description="A list of merchandise"
+     * )
      * )
      */
     public function index(Request $request)
     {
+        $search = $request->query('search');
         $query = Merchandise::query();
 
-        if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
         }
 
-        $perPage = $request->get('per_page', 6);
-        return response()->json($query->paginate($perPage));
+        // Jika ada param `page`, paginate, kalau tidak, return all (untuk hero slider)
+        if ($request->has('page')) {
+            return $query->paginate(6);
+        }
+
+        return $query->get(); // untuk hero slider
     }
 
     /**
-     * @OA\Post(
-     *     path="/api/merchandise",
-     *     tags={"Merchandise"},
-     *     summary="Create a new merchandise item",
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"name", "price", "stock"},
-     *             @OA\Property(property="name", type="string"),
-     *             @OA\Property(property="price", type="number"),
-     *             @OA\Property(property="stock", type="integer")
-     *         )
-     *     ),
-     *     @OA\Response(response=201, description="Merchandise created")
-     * )
-     */
-    public function store(Request $request)
-{
-    $request->validate([
-    'name' => 'required|string|max:255',
-    'price' => 'required|numeric|min:0',
-    'stock' => 'nullable|integer|min:0',
-    ]);
-
-    $merch = Merchandise::create([
-        'name' => $request->name,
-        'price' => $request->price,
-        'description' => $request->description,
-        'image' => $request->image,
-        'stock' => $request->stock ?? 0
-    ]);
-
-    return response()->json($merch, 201);
-}
-
-
-    /**
      * @OA\Get(
-     *     path="/api/merchandise/{id}",
-     *     tags={"Merchandise"},
-     *     summary="Get a single merchandise item",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Merchandise found"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Not found"
-     *     )
+     * path="/api/v1/merchandise/{id}",
+     * summary="Get a merchandise by ID",
+     * tags={"Merchandise"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Merchandise details"
+     * ),
+     * @OA\Response(
+     * response=404,
+     * description="Merchandise not found"
+     * )
      * )
      */
     public function show($id)
     {
-        return Merchandise::findOrFail($id);
+        $merchandise = Merchandise::find($id);
+
+        if (!$merchandise) {
+            return response()->json(['message' => 'Merchandise not found'], 404);
+        }
+
+        return response()->json($merchandise);
+    }
+
+    /**
+     * @OA\Post(
+     * path="/api/v1/merchandise",
+     * summary="Create a new merchandise",
+     * tags={"Merchandise"},
+     * security={{"bearerAuth":{}}},
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\MediaType(
+     * mediaType="multipart/form-data",
+     * @OA\Schema(
+     * required={"name", "description", "price", "image"},
+     * @OA\Property(property="name", type="string"),
+     * @OA\Property(property="description", type="string"),
+     * @OA\Property(property="price", type="number", format="float"),
+     * @OA\Property(property="image", type="string", format="binary")
+     * )
+     * )
+     * ),
+     * @OA\Response(
+     * response=201,
+     * description="Merchandise created successfully"
+     * )
+     * )
+     */
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $imagePath = $request->file('image')->store('merchandise', 'public');
+
+        $merchandise = Merchandise::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'image' => $imagePath,
+        ]);
+
+        return response()->json($merchandise, 201);
     }
 
     /**
      * @OA\Put(
-     *     path="/api/merchandise/{id}",
-     *     tags={"Merchandise"},
-     *     summary="Update a merchandise item",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             @OA\Property(property="name", type="string"),
-     *             @OA\Property(property="description", type="string"),
-     *             @OA\Property(property="price", type="number")
-     *         )
-     *     ),
-     *     @OA\Response(response=200, description="Updated successfully")
+     * path="/api/v1/merchandise/{id}",
+     * summary="Update a merchandise",
+     * tags={"Merchandise"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\RequestBody(
+     * required=true,
+     * @OA\JsonContent(
+     * @OA\Property(property="name", type="string"),
+     * @OA\Property(property="description", type="string"),
+     * @OA\Property(property="price", type="number", format="float")
+     * )
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Merchandise updated successfully"
+     * ),
+     * @OA\Response(
+     * response=404,
+     * description="Merchandise not found"
+     * )
      * )
      */
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'sometimes|string|max:255',
-        'price' => 'sometimes|numeric|min:0',
-        'stock' => 'nullable|integer|min:0',
-    ]);
+    {
+        $merchandise = Merchandise::find($id);
 
-    $merch = Merchandise::findOrFail($id);
-    $data = $request->only(['name', 'description', 'price', 'stock', 'image']);
+        if (!$merchandise) {
+            return response()->json(['message' => 'Merchandise not found'], 404);
+        }
 
-    $merch->update($data);
+        $validator = Validator::make($request->all(), [
+            'name' => 'string|max:255',
+            'description' => 'string',
+            'price' => 'numeric',
+        ]);
 
-    return response()->json($merch);
-}
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $merchandise->update($request->all());
+
+        return response()->json($merchandise);
+    }
 
     /**
      * @OA\Delete(
-     *     path="/api/merchandise/{id}",
-     *     tags={"Merchandise"},
-     *     summary="Delete a merchandise item",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer", format="int64")
-     *     ),
-     *     @OA\Response(
-     *         response=204,
-     *         description="Deleted successfully"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Item not found"
-     *     )
+     * path="/api/v1/merchandise/{id}",
+     * summary="Delete a merchandise",
+     * tags={"Merchandise"},
+     * security={{"bearerAuth":{}}},
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * @OA\Schema(type="integer")
+     * ),
+     * @OA\Response(
+     * response=200,
+     * description="Merchandise deleted successfully"
+     * ),
+     * @OA\Response(
+     * response=404,
+     * description="Merchandise not found"
+     * )
      * )
      */
     public function destroy($id)
     {
-        $merch = Merchandise::findOrFail($id);
-        $merch->delete();
+        $merchandise = Merchandise::find($id);
 
-        return response()->json(['message' => 'Deleted successfully'], 204);
+        if (!$merchandise) {
+            return response()->json(['message' => 'Merchandise not found'], 404);
+        }
+
+        Storage::disk('public')->delete($merchandise->image);
+        $merchandise->delete();
+
+        return response()->json(['message' => 'Merchandise deleted successfully']);
     }
 }

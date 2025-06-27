@@ -15,9 +15,12 @@ Route::prefix('user')->group(function () {
     })->middleware('auth:api');
 });
 
-Route::resource('merchandise', MerchandiseController::class)
-    ->only(['index', 'show']);
+Route::middleware('auth:api')->group(function(){
+        Route::get('/merchandise', [MerchandiseController::class, 'index']);
+        Route::get('/merchandise/{id}', [MerchandiseController::class, 'show']);
+        Route::post('/merchandise', [MerchandiseController::class, 'store']);
+        Route::put('/merchandise/{id}', [MerchandiseController::class, 'update']);
+        Route::delete('/merchandise/{id}', [MerchandiseController::class, 'destroy']);
+    });
 
-Route::resource('merchandise', MerchandiseController::class)
-    ->except(['index', 'show'])
-    ->middleware('auth:api');
+Route::get('/merchandise', [MerchandiseController::class, 'index']);

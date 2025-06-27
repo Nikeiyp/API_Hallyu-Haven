@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('merchandise', function (Blueprint $table) {
+    Schema::create('merchandise', function (Blueprint $table) {
     $table->bigIncrements('id');
     $table->string('name'); // VARCHAR(255)
     $table->text('description')->nullable();
