@@ -1,42 +1,76 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Merchandise;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use App\Models\Merchandise;
+use OpenApi\Annotations as OA;
 
 class MerchandiseController extends Controller
 {
     /**
      * @OA\Get(
-     * path="/api/v1/merchandise",
-     * summary="Get all merchandise",
-     * tags={"Merchandise"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Response(
-     * response=200,
-     * description="A list of merchandise"
-     * )
+     *     path="/api/merchandise",
+     *     tags={"merchandise"},
+     *     summary="Get list of merchandise",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent()
+     *     ),
+     *     @OA\Parameter(name="_page", in="query", required=true, @OA\Schema(type="integer", example=1)),
+     *     @OA\Parameter(name="_limit", in="query", required=true, @OA\Schema(type="integer", example=10)),
+     *     @OA\Parameter(name="_search", in="query", required=false, @OA\Schema(type="string")),
+     *     @OA\Parameter(name="_sort_by", in="query", required=false, @OA\Schema(type="string", example="latest")),
      * )
      */
-    public function index(Request $request)
+   
+     public function index(Request $request)
     {
-        $search = $request->query('search');
+        $page = (int) ($request->_page ?? 1);
+        $limit = (int) ($request->_limit ?? 8);
+        $offset = ($page - 1) * $limit;
+
         $query = Merchandise::query();
 
-        if ($search) {
-            $query->where('name', 'like', "%{$search}%");
+        if ($request->_search) {
+            $query->where('name', 'like', '%' . $request->_search . '%');
+        }
+        
+        if ($request->_sort_by) {
+            switch ($request->_sort_by) {
+                case 'name_asc':
+                    $query->orderBy('name', 'ASC');
+                    break;
+                case 'name_desc':
+                    $query->orderBy('name', 'DESC');
+                    break;
+                case 'price_asc':
+                    $query->orderBy('price', 'ASC');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'DESC');
+                    break;
+                default:
+                    $query->orderBy('created_at', 'DESC');
+                    break;
+            }
         }
 
-        // Jika ada param `page`, paginate, kalau tidak, return all (untuk hero slider)
-        if ($request->has('page')) {
-            return $query->paginate(6);
-        }
+        $products = $query->offset($offset)->limit($limit)->get();
+        $total = $query->count();
 
-        return $query->get(); // untuk hero slider
+        return response()->json([
+            'filter' => $request->all(),
+            'products' => $products,
+            'products_count_total' => $total,
+            'products_count_start' => ($total > 0) ? $offset + 1 : 0,
+            'products_count_end' => ($total > 0) ? $offset + count($products) : 0
+        ], 200);
     }
 
     /**
@@ -210,4 +244,7 @@ class MerchandiseController extends Controller
 
         return response()->json(['message' => 'Merchandise deleted successfully']);
     }
+
+    
+
 }

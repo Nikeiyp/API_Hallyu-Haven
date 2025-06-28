@@ -21,6 +21,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/plugins/easyzoom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('asset/css/plugins/slick-theme.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     @yield('addition_css')
     <!-- END: CSS Assets -->
 </head>
@@ -33,6 +35,7 @@
             @include('components.footer')
         </div>
     </div>
+
 
     <!-- BEGIN: JS Assets -->
     <script src="{{ asset('asset/js/vendor/modernizr-2.8.3.min.js') }}"></script>
@@ -47,7 +50,6 @@
     <script src="{{ asset('asset/js/plugins/easyzoom.js') }}"></script>
     <script src="{{ asset('asset/js/plugins/images-loaded.min.js') }}"></script>
     <script src="{{ asset('asset/js/plugins/isotope.min.js') }}"></script>
-    <script src="{{ asset('asset/js/plugins/YTplayer.js') }}"></script>
     
     <!-- Instagramfeed JS -->
     <!-- <script src="{{ asset('assets/js/plugins/jquery.instagramfeed.min.js')}}"></script> -->

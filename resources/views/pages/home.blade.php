@@ -8,7 +8,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="hero-area" id="product-preview"></div>
+                    <div class="hero-area hero-slider-seven" id="product-preview"></div>
                 </div>
             </div>
         </div>
@@ -35,11 +35,11 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="banner-video-box" id="video-banner" style="position: relative; cursor: pointer;">
-                        <img id="video-thumbnail" src="{{ asset('asset/hallyu-images/bpdeadline.jpg') }}" alt="Video Thumbnail" class="img-fluid">
-                        <div class="video-icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                            <i class="linear-icon-play" style="font-size: 48px; color: white;"></i>
-                        </div>
+                    <img id="video-thumbnail" src="{{ asset('asset/hallyu-images/bpdeadline.jpg') }}" alt="Video Thumbnail" class="img-fluid">
+                    <div class="video-icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <i class="linear-icon-play" style="font-size: 48px; color: white;"></i>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -121,21 +121,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const youtubePlayer = document.getElementById('youtubePlayer');
     const youtubeURL = "https://www.youtube.com/embed/8YiR9v3sOpk?autoplay=1&mute=1";
 
-    if (!banner || !youtubePlayer) return;
+    if (banner && youtubePlayer) {
+        banner.addEventListener('click', function () {
+            youtubePlayer.src = youtubeURL;
+            $('#videoModal').modal('show');
+        });
 
-    banner.addEventListener('click', function () {
-        youtubePlayer.src = youtubeURL;
-        $('#videoModal').modal('show');
-    });
-
-    $('#videoModal').on('hidden.bs.modal', function () {
-        youtubePlayer.src = '';
-    });
+        $('#videoModal').on('hidden.bs.modal', function () {
+            youtubePlayer.src = '';
+        });
+    }
 });
 </script>
 
-<!-- JS Produk & Pencarian -->
-<script src="{{ asset('pages/js/home.js') }}"></script>
+<!-- JS Slider -->
 <script src="{{ asset('asset/js/plugins/slick.min.js') }}"></script>
-
+<script src="{{ asset('pages/js/home.js') }}"></script>
 @endsection
