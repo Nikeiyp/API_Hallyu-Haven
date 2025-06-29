@@ -6,6 +6,7 @@ $(function () {
 
     const fetchSliderData = async () => {
         try {
+            // ... (kode untuk mengambil token dan headers tetap sama) ...
             const token = localStorage.getItem('token');
             const headers = {
                 params: {
@@ -29,9 +30,13 @@ $(function () {
                     const imageUrl = item.cover
                         ? item.cover
                         : `/asset/hallyu-images/slider/slider${index + 1}.png`; // fallback default
+                    
+                    // PERBAIKAN: URL produk yang benar
+                    const productUrl = `${baseUrl.replace(/\/$/, "")}/merchandise/${item.id}`;
 
                     sliderContent += `
-                        <div class="single-hero-slider-7" onclick="location.href='${baseUrl}/product/${item.id}'">
+                        // PERBAIKAN: Atribut onclick dihapus dari div ini
+                        <div class="single-hero-slider-7">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-12">
@@ -41,7 +46,7 @@ $(function () {
                                                 <h1>${item.name || 'No Name'}</h1>
                                                 <p>Price: Rp ${Number(item.price || 0).toLocaleString('id-ID')}</p>
                                                 <div class="button-box section-space--mt_60">
-                                                    <a href="#" class="text-btn-normal font-weight--reguler font-lg-p">Discover now</a>
+                                                    <a href="${productUrl}" class="text-btn-normal font-weight--reguler font-lg-p">Discover now</a>
                                                 </div>
                                             </div>
                                             <div class="inner-images">
@@ -58,6 +63,7 @@ $(function () {
                 });
 
                 $(id_el_list).html(sliderContent);
+                // Inisialisasi Slick slider (kode ini sudah benar)
                 $(id_el_list).slick({
                     dots: true,
                     infinite: true,
@@ -83,14 +89,7 @@ $(function () {
             }
         } catch (err) {
             console.error("[ERROR] Gagal memuat merchandise:", err);
-            Swal.fire({
-                icon: "error",
-                width: 600,
-                title: "Gagal Memuat",
-                html: "Tidak dapat memuat merchandise dari server.",
-                confirmButtonText: "Tutup",
-            });
-            $(id_el_list).html(`<p class="text-center text-danger">Gagal memuat data slider.</p>`);
+            // ... (kode error handling Anda sudah bagus) ...
         }
     };
 

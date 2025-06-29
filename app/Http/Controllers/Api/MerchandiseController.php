@@ -110,7 +110,7 @@ class MerchandiseController extends Controller
      */
     public function slider()
     {
-        $ids = [4, 10, 5];
+        $ids = [2, 5, 1];
         $idsStr = implode(',', $ids);
 
         $products = Merchandise::whereIn('id', $ids)

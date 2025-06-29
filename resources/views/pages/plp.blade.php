@@ -16,8 +16,6 @@
                                         <option value="" selected>All</option>
                                         <option value="lightstick">Lightstick</option>
                                         <option value="album">Album</option>
-                                        <option value="photocard">Photocard</option>
-                                        <option value="poster">Poster</option>
                                     </select>
                             </div>
                         </div>

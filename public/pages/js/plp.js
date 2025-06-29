@@ -100,16 +100,16 @@ function getData(toPage = 1) {
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="single-product-item text-center">
                         <div class="products-images">
-                            <a href="/product/${item.id}" class="product-thumbnail">
+                            <a href="/merchandise/${item.id}" class="product-thumbnail">
                                 <img src="/storage/${item.image}" alt="${item.name}" class="product-thumbnail">
                             </a>
                             <div class="product-actions">
-                                <a href="/product/${item.id}"><i class="p-icon icon-plus"></i><span class="tool-tip">Quick View</span></a>
+                                <a href="/merchandise/${item.id}"><i class="p-icon icon-plus"></i><span class="tool-tip">Quick View</span></a>
                                 <a href="#"><i class="p-icon icon-bag2"></i><span class="tool-tip">Add to cart</span></a>
                             </div>
                         </div>
                         <div class="product-content">
-                            <h6 class="product-title"><a href="/product/${item.id}">${item.name}</a></h6>
+                            <h6 class="product-title"><a href="/merchandise/${item.id}">${item.name}</a></h6>
                             <div class="product-price"><span class="new-price">IDR ${parseFloat(item.price).toLocaleString()}</span></div>
                         </div>
                     </div>
@@ -151,6 +151,7 @@ function getData(toPage = 1) {
         .catch(function (error) {
             console.log("[ERROR] response..", error);
             if (error.code === "ERR_BAD_REQUEST") {
+                $(id_el_list).html(""); // Kosongkan list produk jika tidak ditemukan
                 Swal.fire({
                     position: "top-end",
                     icon: "warning",
