@@ -11,12 +11,12 @@ $(function () {
                 params: {
                     _limit: 3,
                     _page: 1,
-                    _sort_by: "latest_published",
+                    _is_slider: 1, 
                 },
                 ...(token && { headers: { Authorization: `Bearer ${token}` } }),
             };
 
-            const url = baseUrl.replace(/\/$/, "") + "/api/merchandise";
+            const url = baseUrl.replace(/\/$/, "") + "/api/slider-merchandise";
             const response = await axios.get(url, headers);
             const data = response.data;
 
@@ -38,7 +38,7 @@ $(function () {
                                         <div class="hero-content-wrap">
                                             <div class="hero-text-7 mt-lg-5">
                                                 <h6 class="mb-20">New Arrival</h6>
-                                                <h1>${item.title || item.name}</h1>
+                                                <h1>${item.name || 'No Name'}</h1>
                                                 <p>Price: Rp ${Number(item.price || 0).toLocaleString('id-ID')}</p>
                                                 <div class="button-box section-space--mt_60">
                                                     <a href="#" class="text-btn-normal font-weight--reguler font-lg-p">Discover now</a>

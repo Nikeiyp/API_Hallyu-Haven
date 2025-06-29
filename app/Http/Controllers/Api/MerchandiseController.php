@@ -1,12 +1,11 @@
 <?php
 
-
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Models\Merchandise;
 use OpenApi\Annotations as OA;
 
@@ -25,11 +24,10 @@ class MerchandiseController extends Controller
      *     @OA\Parameter(name="_page", in="query", required=true, @OA\Schema(type="integer", example=1)),
      *     @OA\Parameter(name="_limit", in="query", required=true, @OA\Schema(type="integer", example=10)),
      *     @OA\Parameter(name="_search", in="query", required=false, @OA\Schema(type="string")),
-     *     @OA\Parameter(name="_sort_by", in="query", required=false, @OA\Schema(type="string", example="latest")),
+     *     @OA\Parameter(name="_sort_by", in="query", required=false, @OA\Schema(type="string", example="latest"))
      * )
      */
-   
-     public function index(Request $request)
+    public function index(Request $request)
     {
         $page = (int) ($request->_page ?? 1);
         $limit = (int) ($request->_limit ?? 8);
@@ -37,10 +35,35 @@ class MerchandiseController extends Controller
 
         $query = Merchandise::query();
 
+        if ($request->_type) {
+            $query->where('type', $request->_type);
+        }
+
+        if ($request->_price_range) {
+        switch ($request->_price_range) {
+            case 'under_100':
+                $query->where('price', '<', 100000);
+                break;
+            case '100_500':
+                $query->whereBetween('price', [100000, 500000]);
+                break;
+            case '501_1000':
+                $query->whereBetween('price', [501000, 1000000]);
+                break;
+            case 'above_1000':
+                $query->where('price', '>', 1000000);
+                break;
+            }
+        }
+
         if ($request->_search) {
             $query->where('name', 'like', '%' . $request->_search . '%');
         }
-        
+
+        if ($request->_tags) {
+            $query->where('tags', 'like', '%' . $request->_tags . '%');
+        }
+
         if ($request->_sort_by) {
             switch ($request->_sort_by) {
                 case 'name_asc':
@@ -75,26 +98,30 @@ class MerchandiseController extends Controller
 
     /**
      * @OA\Get(
-     * path="/api/v1/merchandise/{id}",
-     * summary="Get a merchandise by ID",
-     * tags={"Merchandise"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     * name="id",
-     * in="path",
-     * required=true,
-     * @OA\Schema(type="integer")
-     * ),
-     * @OA\Response(
-     * response=200,
-     * description="Merchandise details"
-     * ),
-     * @OA\Response(
-     * response=404,
-     * description="Merchandise not found"
-     * )
+     *     path="/api/slider-merchandise",
+     *     tags={"merchandise"},
+     *     summary="Get merchandise for slider (by selected IDs)",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Slider merchandise loaded successfully",
+     *         @OA\JsonContent()
+     *     )
      * )
      */
+    public function slider()
+    {
+        $ids = [4, 10, 5];
+        $idsStr = implode(',', $ids);
+
+        $products = Merchandise::whereIn('id', $ids)
+            ->orderByRaw("FIELD(id, $idsStr)")
+            ->get();
+
+        return response()->json([
+            'products' => $products
+        ]);
+    }
+
     public function show($id)
     {
         $merchandise = Merchandise::find($id);
@@ -106,31 +133,6 @@ class MerchandiseController extends Controller
         return response()->json($merchandise);
     }
 
-    /**
-     * @OA\Post(
-     * path="/api/v1/merchandise",
-     * summary="Create a new merchandise",
-     * tags={"Merchandise"},
-     * security={{"bearerAuth":{}}},
-     * @OA\RequestBody(
-     * required=true,
-     * @OA\MediaType(
-     * mediaType="multipart/form-data",
-     * @OA\Schema(
-     * required={"name", "description", "price", "image"},
-     * @OA\Property(property="name", type="string"),
-     * @OA\Property(property="description", type="string"),
-     * @OA\Property(property="price", type="number", format="float"),
-     * @OA\Property(property="image", type="string", format="binary")
-     * )
-     * )
-     * ),
-     * @OA\Response(
-     * response=201,
-     * description="Merchandise created successfully"
-     * )
-     * )
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -156,36 +158,6 @@ class MerchandiseController extends Controller
         return response()->json($merchandise, 201);
     }
 
-    /**
-     * @OA\Put(
-     * path="/api/v1/merchandise/{id}",
-     * summary="Update a merchandise",
-     * tags={"Merchandise"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     * name="id",
-     * in="path",
-     * required=true,
-     * @OA\Schema(type="integer")
-     * ),
-     * @OA\RequestBody(
-     * required=true,
-     * @OA\JsonContent(
-     * @OA\Property(property="name", type="string"),
-     * @OA\Property(property="description", type="string"),
-     * @OA\Property(property="price", type="number", format="float")
-     * )
-     * ),
-     * @OA\Response(
-     * response=200,
-     * description="Merchandise updated successfully"
-     * ),
-     * @OA\Response(
-     * response=404,
-     * description="Merchandise not found"
-     * )
-     * )
-     */
     public function update(Request $request, $id)
     {
         $merchandise = Merchandise::find($id);
@@ -209,28 +181,6 @@ class MerchandiseController extends Controller
         return response()->json($merchandise);
     }
 
-    /**
-     * @OA\Delete(
-     * path="/api/v1/merchandise/{id}",
-     * summary="Delete a merchandise",
-     * tags={"Merchandise"},
-     * security={{"bearerAuth":{}}},
-     * @OA\Parameter(
-     * name="id",
-     * in="path",
-     * required=true,
-     * @OA\Schema(type="integer")
-     * ),
-     * @OA\Response(
-     * response=200,
-     * description="Merchandise deleted successfully"
-     * ),
-     * @OA\Response(
-     * response=404,
-     * description="Merchandise not found"
-     * )
-     * )
-     */
     public function destroy($id)
     {
         $merchandise = Merchandise::find($id);
@@ -244,7 +194,4 @@ class MerchandiseController extends Controller
 
         return response()->json(['message' => 'Merchandise deleted successfully']);
     }
-
-    
-
 }

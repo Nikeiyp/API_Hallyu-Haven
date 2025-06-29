@@ -12,51 +12,29 @@
                         <div class="shop-widget widget-shop-publishers mt-3">
                             <div class="product-filter">
                                 <h6 class="mb-20">Type</h6>
-                                <select class="_filter form-select form-select-sm" name="_publisher" onchange="getData(1)">
-                                    <option value="" selected>All</option>
-                                    <option value="putnam">Putnam</option>
-                                    <option value="harriman house">Harriman House</option>
-                                    <option value="balai pustaka">Balai Pustaka</option>
-                                    <option value="Lentera dipantara">Lentera Dipantara</option>
-                                    <option value="pan books">Pan Books</option>
-                                    <option value="firefly books">Firefly Books</option>
-                                    <option value="gramedia">Gramedia</option>
-                                    <option value="scholastic">Scholastic</option>
-                                    <option value="harper">Harper</option>
-                                    <option value="dk children">DK Children</option>
-                                    <option value="bentang pustaka">Bentang Pustaka</option>
-                                    <option value="gagas media">Gagas Media</option>
-                                    <option value="grasindo">Grasindo</option>
-                                    <option value="Marjin Kiri">Marjin Kiri</option>
-                                </select>
+                                    <select class="_filter form-select form-select-sm" name="_type" onchange="getData(1)">
+                                        <option value="" selected>All</option>
+                                        <option value="lightstick">Lightstick</option>
+                                        <option value="album">Album</option>
+                                        <option value="photocard">Photocard</option>
+                                        <option value="poster">Poster</option>
+                                    </select>
                             </div>
                         </div>
 
-                        <!-- Color Filter -->
-                        <div class="shop-widget widget-color">
-                            <div class="product-filter">
-                                <h6 class="mb-20">Color</h6>
-                                <ul class="widget-nav-list">
-                                    <li><span class="swatch-color black"></span></li>
-                                    <li><span class="swatch-color green"></span></li>
-                                    <li><span class="swatch-color grey"></span></li>
-                                    <li><span class="swatch-color red"></span></li>
-                                    <li><span class="swatch-color white"></span></li>
-                                    <li><span class="swatch-color yellow"></span></li>
-                                </ul>
-                            </div>
-                        </div>
+                        <!-- Color Filter-->
 
                         <!-- Price Filter -->
                         <div class="shop-widget">
                             <div class="product-filter widget-price">
                                 <h6 class="mb-20">Price</h6>
                                 <ul class="widget-nav-list">
-                                    <li><a href="#">Under IDR 100K</a></li>
-                                    <li><a href="#">IDR 100-500K</a></li>
-                                    <li><a href="#">IDR 501-1000K</a></li>
-                                    <li><a href="#">Above IDR 1000K</a></li>
+                                    <li><a href="javascript:;" name="_price_range" data-value="under_100" onclick="setFilter(this)">Under IDR 100K</a></li>
+                                    <li><a href="javascript:;" name="_price_range" data-value="100_500" onclick="setFilter(this)">IDR 100-500K</a></li>
+                                    <li><a href="javascript:;" name="_price_range" data-value="501_1000" onclick="setFilter(this)">IDR 501-1000K</a></li>
+                                    <li><a href="javascript:;" name="_price_range" data-value="above_1000" onclick="setFilter(this)">Above IDR 1000K</a></li>
                                 </ul>
+                                <button class="btn btn-sm btn-outline-secondary mt-2" onclick="clearPriceFilter()">Clear Price Filter</button>
                             </div>
                         </div>
 
@@ -65,24 +43,12 @@
                             <div class="product-filter">
                                 <h6 class="mb-20">Tags</h6>
                                 <div class="blog-tagcloud">
-                                    <a href="#">Book</a>
-                                    <a href="#">E-Book</a>
-                                    <a href="#">Best Seller</a>
-                                    <a href="#">Fiction</a>
-                                    <a href="#">Education</a>
-                                    <a href="#">Literature</a>
-                                    <a href="#">Classics</a>
-                                    <a href="#">Real Event</a>
-                                    <a href="#">Young Adult</a>
-                                    <a href="#">Religion</a>
-                                    <a href="#">Health</a>
-                                    <a href="#">Comic</a>
-                                    <a href="#">Horror</a>
-                                    <a href="#">Poem</a>
-                                    <a href="#">Filmed</a>
-                                    <a href="#">Encyclopedia</a>
-                                    <a href="#">In English</a>
-                                    <a href="#">In Indonesian</a>
+                                    <a href="javascript:;" name="_tags" data-value="bts" onclick="setTag('bts')">BTS</a>
+                                    <a href="javascript:;" name="_tags" data-value="exo" onclick="setTag('exo')">EXO</a>
+                                    <a href="javascript:;" name="_tags" data-value="twice" onclick="setTag('twice')">TWICE</a>
+                                    <a href="javascript:;" name="_tags" data-value="blackpink" onclick="setTag('blackpink')">BLACKPINK</a>
+                                    <a href="javascript:;" name="_tags" data-value="nct" onclick="setTag('nct')">NCT</a>
+                                    <a href="javascript:;" class="text-danger" onclick="clearTagFilter()">Clear Tags</a>
                                 </div>
                             </div>
                         </div>
@@ -112,7 +78,7 @@
                             <div class="col-lg-6 col-md-4">
                                 <div class="header-right-search">
                                     <div class="header-search-box">
-                                        <input class="_filter search-field" name="_search" type="text" onkeypress="getDataOnEnter(event)" placeholder="Search by title or author...">
+                                        <input class="_filter search-field" name="_search" type="text" onkeypress="getDataOnEnter(event)" placeholder="Search Album or Your Fave...">
                                         <button class="search-icon"><i class="icon-magnifier"></i></button>
                                     </div>
                                 </div>

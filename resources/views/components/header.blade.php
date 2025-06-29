@@ -19,7 +19,7 @@
                     <div class="header-right-items content__hidden d-none d-md-block">
                         <span class="phone-number font-lg-p" title="Call us for fast delivery">
                             <a href="#cfd"><i class="icon-telephone"></i>&nbsp;&nbsp;<small
-                                    class="text-color-primary"><b>+(62) 82112459957</b></small></a>
+                                    class="text-color-primary"><b>+(62) 8980170200</b></small></a>
                         </span>
                     </div>
                     <div class="logo__hidden text-start">

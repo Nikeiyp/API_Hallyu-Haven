@@ -24,3 +24,4 @@ Route::middleware('auth:api')->group(function(){
     });
 
 Route::get('/merchandise', [MerchandiseController::class, 'index']);
+Route::get('/slider-merchandise', [MerchandiseController::class, 'slider']);

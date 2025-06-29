@@ -29,21 +29,23 @@
         </div>
     </div>
 
-    <!-- Banner Video Area -->
-    <div class="banner-video-area overflow-hidden">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="banner-video-box" id="video-banner" style="position: relative; cursor: pointer;">
-                    <img id="video-thumbnail" src="{{ asset('asset/hallyu-images/bpdeadline.jpg') }}" alt="Video Thumbnail" class="img-fluid">
-                    <div class="video-icon" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                        <i class="linear-icon-play" style="font-size: 48px; color: white;"></i>
+   <!-- Banner Video Area Start -->
+        <div class="banner-video-area overflow-hidden">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="banner-video-box position-relative text-center">
+                            <img src="{{ asset('asset/hallyu-images/gwbg.jpg') }}" alt="video thumbnail" class="img-fluid rounded shadow" style="max-width: 100%; height: auto;">
+                            <div class="video-icon">
+                                <a href="https://www.youtube.com/watch?v=1KhOhW_O8-k" class="popup-youtube">
+                                    <i class="linear-ic-play"></i></a>
+                            </div>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
-    </div>
+        <!-- Banner Video Area End -->
 
     <!-- Brand Logo Section -->
     <div class="our-brand-area section-space--pb_90">
@@ -91,47 +93,22 @@
         </div>
     </div>
 
-    <!-- Video Modal -->
-    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content bg-dark text-white">
-                <div class="modal-header border-0">
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="font-size: 2rem;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <iframe id="youtubePlayer" class="embed-responsive-item" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
 
 @section('addition_css')
+
+ <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/plugins/magnific-popup.css') }}">
+
 @endsection
 
 @section('addition_script')
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const banner = document.getElementById('video-banner');
-    const youtubePlayer = document.getElementById('youtubePlayer');
-    const youtubeURL = "https://www.youtube.com/embed/8YiR9v3sOpk?autoplay=1&mute=1";
-
-    if (banner && youtubePlayer) {
-        banner.addEventListener('click', function () {
-            youtubePlayer.src = youtubeURL;
-            $('#videoModal').modal('show');
-        });
-
-        $('#videoModal').on('hidden.bs.modal', function () {
-            youtubePlayer.src = '';
-        });
+    function setYoutubeVideo(videoId) {
+        const iframe = document.getElementById('youtubeIframe');
+        iframe.dataset.videoId = videoId; 
     }
-});
 </script>
 
 <!-- JS Slider -->
