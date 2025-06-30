@@ -1,12 +1,9 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Hallyu Haven API",
-        "description": "API dokumentasi toko online Kpop merchandise",
-        "contact": {
-            "email": "nikeisha.422024026@gmail.com"
-        },
-        "version": "1.0.0"
+        "title": "My API",
+        "description": "This is The API documentation for my very first REST API.",
+        "version": "1.0"
     },
     "paths": {
         "/api/user/register": {
@@ -15,37 +12,27 @@
                     "user"
                 ],
                 "summary": "Register new user & get token",
-                "operationId": "register",
+                "operationId": "2d2ebba728688d7f51887b0cd28ca35a",
                 "requestBody": {
-                    "description": "Request body description",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {},
                             "example": {
-                                "name": "Augusta Ada Byron",
+                                "name": "Ada Lovelace",
                                 "email": "ada.lovelace@gmail.com",
-                                "password": "Ba88a93$"
+                                "password": "Password123",
+                                "password_confirmation": "Password123"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "400": {
-                        "description": "Invalid input",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "201": {
-                        "description": "Successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
+                        "description": "Successful registration"
+                    },
+                    "400": {
+                        "description": "Validation error"
                     }
                 }
             }
@@ -55,39 +42,26 @@
                 "tags": [
                     "user"
                 ],
-                "summary": "Log in to existing user & get token",
-                "operationId": "login",
+                "summary": "Log in and receive token",
+                "operationId": "0e18ef6db0c92942c80f123acaeef89c",
                 "requestBody": {
-                    "description": "Request body description",
                     "required": true,
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/User"
-                            },
+                            "schema": {},
                             "example": {
                                 "email": "ada.lovelace@gmail.com",
-                                "password": "Ba88a93$"
+                                "password": "Password123"
                             }
                         }
                     }
                 },
                 "responses": {
-                    "400": {
-                        "description": "Invalid input",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
+                        "description": "Login successful"
+                    },
+                    "400": {
+                        "description": "Invalid credentials"
                     }
                 }
             }
@@ -97,40 +71,18 @@
                 "tags": [
                     "user"
                 ],
-                "summary": "Log out & destroy self token",
-                "operationId": "logout",
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "path",
-                        "description": "User Email",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
+                "summary": "Logout and revoke token",
+                "operationId": "dd60e2b11d5020dfb3e95e8d9fdee36d",
                 "responses": {
-                    "400": {
-                        "description": "Invalid input",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
+                        "description": "Logout successful"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
                     {
-                        "passport_token_ready": [],
                         "passport": []
                     }
                 ]
@@ -142,36 +94,55 @@
                     "Merchandise"
                 ],
                 "summary": "Get list of merchandise",
-                "description": "Returns list of merchandise with optional filtering and pagination",
-                "operationId": "3b0afb300edbee208736285d24e8b56d",
+                "description": "Returns a paginated list of merchandise with filtering and sorting options.",
+                "operationId": "getMerchandiseList",
                 "parameters": [
                     {
-                        "name": "search",
+                        "name": "_page",
                         "in": "query",
-                        "description": "Filter by product name",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "_limit",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "_search",
+                        "in": "query",
+                        "description": "Search by merchandise name",
                         "required": false,
                         "schema": {
                             "type": "string"
                         }
                     },
                     {
-                        "name": "page",
+                        "name": "_sort_by",
                         "in": "query",
-                        "description": "Pagination page number",
+                        "description": "Sort by criteria (e.g., 'latest', 'name_asc', 'price_desc')",
                         "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "string",
+                            "example": "latest"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful",
+                        "description": "Successful operation",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "type": "object"
-                                }
+                                "schema": {}
                             }
                         }
                     }
@@ -181,27 +152,39 @@
                 "tags": [
                     "Merchandise"
                 ],
-                "summary": "Create a new merchandise item",
-                "operationId": "7cded85aecb04b137403dccf7a1b0be1",
+                "summary": "Create a new merchandise",
+                "description": "Stores a new merchandise item with an image upload.",
+                "operationId": "storeMerchandise",
                 "requestBody": {
+                    "description": "Merchandise data",
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "required": [
                                     "name",
+                                    "description",
                                     "price",
-                                    "stock"
+                                    "image"
                                 ],
                                 "properties": {
                                     "name": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "Cool T-Shirt"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A very cool t-shirt made of cotton."
                                     },
                                     "price": {
-                                        "type": "number"
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 150000
                                     },
-                                    "stock": {
-                                        "type": "integer"
+                                    "image": {
+                                        "description": "Image file (jpeg, png, jpg, gif, svg).",
+                                        "type": "string",
+                                        "format": "binary"
                                     }
                                 },
                                 "type": "object"
@@ -211,7 +194,35 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Merchandise created"
+                        "description": "Merchandise created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/slider-merchandise": {
+            "get": {
+                "tags": [
+                    "Merchandise"
+                ],
+                "summary": "Get merchandise for slider",
+                "description": "Returns a specific list of merchandise items for a slider feature.",
+                "operationId": "getSliderMerchandise",
+                "responses": {
+                    "200": {
+                        "description": "Slider merchandise loaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             }
@@ -221,12 +232,14 @@
                 "tags": [
                     "Merchandise"
                 ],
-                "summary": "Get a single merchandise item",
-                "operationId": "54973fff9e9bdaddd0a02de397f04aa7",
+                "summary": "Get a single merchandise",
+                "description": "Returns the details of a specific merchandise item.",
+                "operationId": "getMerchandiseById",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "ID of the merchandise",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -235,10 +248,15 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Merchandise found"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Not found"
+                        "description": "Merchandise not found"
                     }
                 }
             },
@@ -246,12 +264,14 @@
                 "tags": [
                     "Merchandise"
                 ],
-                "summary": "Update a merchandise item",
-                "operationId": "097e405a2e8e0de689d03fc31ecd6efc",
+                "summary": "Update an existing merchandise",
+                "description": "Updates a merchandise item. Note: Use POST with _method=PUT for form-data.",
+                "operationId": "updateMerchandise",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "ID of the merchandise to update",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -259,19 +279,24 @@
                     }
                 ],
                 "requestBody": {
+                    "description": "Merchandise data to update. Image update is not included here but can be handled separately.",
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "application/x-www-form-urlencoded": {
                             "schema": {
                                 "properties": {
                                     "name": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "Updated T-Shirt"
                                     },
                                     "description": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "An updated description."
                                     },
                                     "price": {
-                                        "type": "number"
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 175000
                                     }
                                 },
                                 "type": "object"
@@ -281,7 +306,18 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Updated successfully"
+                        "description": "Merchandise updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Merchandise not found"
+                    },
+                    "400": {
+                        "description": "Validation error"
                     }
                 }
             },
@@ -289,25 +325,39 @@
                 "tags": [
                     "Merchandise"
                 ],
-                "summary": "Delete a merchandise item",
-                "operationId": "99da51d5f6e7c294533dd454708dfd4c",
+                "summary": "Delete a merchandise",
+                "description": "Deletes a specific merchandise item and its associated image.",
+                "operationId": "deleteMerchandise",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "ID of the merchandise to delete",
                         "required": true,
                         "schema": {
-                            "type": "integer",
-                            "format": "int64"
+                            "type": "integer"
                         }
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "Deleted successfully"
+                    "200": {
+                        "description": "Merchandise deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Merchandise deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "404": {
-                        "description": "Item not found"
+                        "description": "Merchandise not found"
                     }
                 }
             }

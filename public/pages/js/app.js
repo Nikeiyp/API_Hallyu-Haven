@@ -1,139 +1,164 @@
-console.log('app js');
+// =================== KODE FINAL UNTUK app.js ===================
 
+console.log('App JS loaded and ready.');
+
+// --- Pengaturan Global ---
 const baseUrl = window.location.origin + '/';
-const apiHeaders = {
+
+// --- Instance Axios untuk request yang butuh otentikasi (token) ---
+const apiClient = axios.create({
+    baseURL: baseUrl,
     headers: {
-        "Access-Control-Allow-Origin": "*",
-        // "Content-Type": "application/json",
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'application/json',
     }
-};
+});
 
-function randomIntFromInterval(min, max) { // min and max included 
-    return Math.floor(Math.random() * (max - min + 1) + min)
-}
-
-function breakword(text) {
-    let newtext = '';
-    let len = 2;
-    let arr = text.split('-');
-    for (let i = 0; i < arr.length; i++) {
-        if (i % len === 0) {
-            newtext += '<br>';
-        }
-        newtext += arr[i] + '-';
+apiClient.interceptors.request.use(config => {
+    const token = getToken();
+    if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
     }
-    return newtext;
+    return config;
+}, error => {
+    return Promise.reject(error);
+});
+
+// --- Fungsi untuk mengelola Cookie & Token ---
+function getToken() {
+    return getCookie('ut') || localStorage.getItem('token');
 }
 
 function getCookie(name) {
-    let value = "; " + document.cookie;
-    let parts = value.split("; " + name + "=");
-    if (parts.length === 2) return parts.pop().split(";").shift();
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
 }
 
-$("#logout-btn").on('click', function(e) {
-    apiHeaders['headers']['Authorization'] = 'Bearer ' + getCookie('ut');
-    let url = baseUrl + 'api/user/logout';
+function setAuthData(token, email) {
+    const cookieOptions = `path=/; SameSite=Lax`;
+    document.cookie = `ut=${token}; ${cookieOptions}`;
+    if (email) {
+        document.cookie = `ue=${email}; ${cookieOptions}`;
+    }
+    localStorage.setItem('token', token);
+}
 
-    axios.post(url, {}, apiHeaders)
-    .then(function (response) {
-        console.log('[DATA] response...', response.data);
-        document.cookie = 'ue=';
-        document.cookie = 'ut=';
-        Swal.fire({
-            position: "top-end",
-            icon: "info",
-            title: "Logout successfully...",
-            showConfirmButton: false,
-            timer: 1500
-        });
-        setTimeout(function() {
-            window.location=baseUrl
-        }, 1500);
-    })
-    .catch(function (error) {
-        console.log('[ERROR] response...', error);
-        Swal.fire({
-            position: "top-end",
-            icon: "warning",
-            title: "Failed to logout",
-            html: error?.response?.data?.message??error.message,
-            timer: 5000
-        });
+function clearAuthData() {
+    const pastDate = 'Thu, 01 Jan 1970 00:00:01 GMT';
+    document.cookie = `ut=; path=/; SameSite=Lax; expires=${pastDate};`;
+    document.cookie = `ue=; path=/; SameSite=Lax; expires=${pastDate};`;
+    localStorage.removeItem('token');
+}
+
+// --- Fungsi Notifikasi & Redirect ---
+function showNotification(icon, title, timer = 1500) {
+    Swal.fire({
+        position: "top-end",
+        icon: icon,
+        title: title,
+        showConfirmButton: false,
+        timer: timer
     });
+}
+
+function redirectToHome(delay = 1500) {
+    setTimeout(() => {
+        window.location.href = baseUrl;
+    }, delay);
+}
+
+// --- Fungsi untuk menangani Error dari API ---
+function handleApiError(error, formType) {
+    console.error(`[${formType.toUpperCase()} ERROR]`, error.response || error);
+    const errorContainer = `#form-${formType}-error`;
+    const loadingContainer = `#form-${formType}-loading`;
+    const formContainer = `#form-${formType}`;
+
+    let message = 'Terjadi kesalahan. Silakan coba lagi.';
+    if (error.response?.data?.errors) {
+        message = Object.values(error.response.data.errors)[0][0];
+    } else if (error.response?.data?.message) {
+        message = error.response.data.message;
+    }
+
+    $(errorContainer).html(message);
+    $(loadingContainer).hide();
+    $(formContainer).show();
+}
+
+// =================== EVENT LISTENERS ===================
+
+// --- Tombol Logout ---
+$("#logout-btn").on('click', function(e) {
+    e.preventDefault();
+    if (!getToken()) {
+        showNotification('error', 'Anda belum login', 3000);
+        return;
+    }
+    apiClient.post('api/user/logout')
+        .then(response => {
+            console.log('[LOGOUT] Success:', response.data);
+            clearAuthData();
+            showNotification('info', 'Berhasil logout...');
+            redirectToHome();
+        })
+        .catch(error => {
+            console.error('[LOGOUT] Error:', error.response || error);
+            if (error.response && error.response.status === 401) {
+                clearAuthData();
+                showNotification('warning', 'Sesi Anda telah berakhir.', 3000);
+                redirectToHome(3000);
+            } else {
+                showNotification('error', error.response?.data?.message || 'Gagal untuk logout', 3000);
+            }
+        });
 });
 
+// --- Tombol Login ---
 $("#form-login-btn").on('click', function(e) {
+    e.preventDefault();
     const form = document.getElementById('form-login');
-    form.reportValidity();
-    if (!form.checkValidity()) {
-        // Do nothing
-    } else {
-        $('#form-login-error').html('');
-        $('#form-login-loading').show();
-        $('#form-login').hide();
-        let url = baseUrl + 'api/user/login';
-        let formData = new FormData(form);
+    if (!form.reportValidity()) return;
 
-        axios.post(url, formData, apiHeaders)
-        .then(function (response) {
-            console.log('[DATA] response...', response.data);
-            document.cookie = 'ue=' + formData.get('email');
-            document.cookie = 'ut=' + response.data.token;
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Login successfully",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            setTimeout(function () {
-                window.location=baseUrl
-            }, 1500);
+    $('#form-login-loading').show();
+    $('#form-login-error').html('');
+    $('#form-login').hide();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const url = baseUrl + 'api/user/login';
+
+    axios.post(url, data)
+        .then(response => {
+            console.log('[LOGIN] Success:', response.data);
+            setAuthData(response.data.token, data.email);
+            showNotification('success', 'Berhasil login');
+            redirectToHome();
         })
-        .catch(function (error) {
-            console.log('[ERROR] response...', error);
-            $('#form-login-error').html(error?.response?.data?.message);
-            $('#form-login-loading').hide();
-            $('#form-login').show();
-        });
-    }
+        .catch(error => handleApiError(error, 'login'));
 });
 
+// --- Tombol Register ---
 $("#form-register-btn").on('click', function(e) {
+    e.preventDefault();
     const form = document.getElementById('form-register');
-    form.reportValidity();
-    if (!form.checkValidity()) {
-        // Do nothing
-    } else {
-        $('#form-register-error').html('');
-        $('#form-register-loading').show();
-        $('#form-register').hide();
-        let url = baseUrl + 'api/user/register';
-        let formData = new FormData(form);
+    if (!form.reportValidity()) return;
 
-        axios.post(url, formData, apiHeaders)
-        .then(function (response) {
-            console.log('[DATA] response...', response.data);
-            document.cookie = 'ue=' + formData.get('email');
-            document.cookie = 'ut=' + response.data.token;
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Registered successfully and logged in automatically",
-                showConfirmButton: false,
-                timer: 1500
-            });
-            setTimeout(function () {
-                window.location=baseUrl
-            }, 1500);
+    $('#form-register-loading').show();
+    $('#form-register-error').html('');
+    $('#form-register').hide();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const url = baseUrl + 'api/user/register';
+
+    axios.post(url, data)
+        .then(response => {
+            console.log('[REGISTER] Success:', response.data);
+            setAuthData(response.data.token, data.email);
+            showNotification('success', 'Berhasil mendaftar');
+            redirectToHome();
         })
-        .catch(function (error) {
-            console.log('[ERROR] response...', error);
-            $('#form-register-error').html(error?.message);
-            $('#form-register-loading').hide();
-            $('#form-register').show();
-        });
-    }
+        .catch(error => handleApiError(error, 'register'));
 });

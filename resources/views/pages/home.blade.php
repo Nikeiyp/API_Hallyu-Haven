@@ -21,7 +21,8 @@
                 <div class="col-lg-12">
                     <div class="about-us-content_6 text-center">
                         <h2>Hallyu Haven Store</h2>
-                        <p><small>Whether you're searching for the latest K-Pop albums, timeless merchandise, or hidden gems, our carefully curated collection has something for every Hallyu fan. Our passionate staff is dedicated to helping you find the perfect item, and our cozy, welcoming environment invites you to linger and explore. Join our community of Hallyu lovers and let us help you. Visit us today and experience the joy of getting lost in the world of Hallyu ❤</small></p>
+                        <p><small>Whether you're searching for the latest K-Pop albums, timeless merchandise,
+                            or hidden gems, our carefully curated collection has something for every Hallyu fan. Our passionate staff is dedicated to helping you find the perfect item, and our cozy,welcoming environment invites you to linger and explore. Join our community of Hallyu lovers and let us help you. Visit us today and experience the joy of getting lost in the world of Hallyu ❤</small></p>
                         <p class="mt-5">Find your gateway to the Korean Wave! Or, even, <span class="text-color-primary">unlock hidden treasures, one album at a time!</span></p>
                     </div>
                 </div>

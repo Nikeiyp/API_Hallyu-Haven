@@ -8,7 +8,7 @@
                     <div class="top-logo-area">
                         <div class="logo text-md-center">
                             <a href="{{route('home')}}"><img src="{{asset('asset/images/logo/logo.png')}}" alt="logo"
-                                    style="width:40%"></a>
+                                    style="width:30%"></a>
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                     </div>
                     <div class="logo__hidden text-start">
                         <a href="{{route('home')}}"><img src="{{asset('asset/images/logo/logo.png')}}" alt=""
-                                style="height:40px"></a>
+                                style="height:100px"></a>
                     </div>
                 </div>
 
